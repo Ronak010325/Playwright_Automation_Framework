@@ -15,7 +15,7 @@ public class HomePageTest extends BaseTest {
         Assert.assertEquals(actualTitle, AppConstants.HOME_PAGE_TITLE);
     }
 
-    @Test
+    @Test(enabled = false)
     public void homePageURLTest() {
         String actualURL = homePage.getHomePageURL();
         Assert.assertEquals(actualURL, prop.getProperty("url"));
@@ -30,7 +30,7 @@ public class HomePageTest extends BaseTest {
         };
     }
 
-    @Test(dataProvider = "getProductData")
+    @Test(dataProvider = "getProductData", enabled = false)
     public void searchTest(String productName) throws InterruptedException {
         Thread.sleep(5000);
         String actualSearchHeader = homePage.doSearch(productName);

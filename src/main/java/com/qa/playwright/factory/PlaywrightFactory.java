@@ -54,21 +54,52 @@ public class PlaywrightFactory {
 
         switch (browserName.toLowerCase()) {
             case "chromium":
-                tlBrowser.set(getPlaywright().chromium().launch(new LaunchOptions().setHeadless(false).setSlowMo(2000)));
+                tlBrowser.set(
+                        getPlaywright()
+                                .chromium()
+                                .launch(new LaunchOptions()
+                                        .setHeadless(Boolean.getBoolean(prop.getProperty("headless")))
+                                )
+                );
                 break;
             case "firefox":
-                tlBrowser.set(getPlaywright().firefox().launch(new BrowserType.LaunchOptions().setHeadless(false)));
+                tlBrowser.set(
+                        getPlaywright()
+                                .firefox()
+                                .launch(new LaunchOptions()
+                                        .setHeadless(Boolean.getBoolean(prop.getProperty("headless"))
+                                        )
+                                )
+                );
                 break;
             case "safari":
-                tlBrowser.set(getPlaywright().webkit().launch(new BrowserType.LaunchOptions().setHeadless(false)));
+                tlBrowser.set(
+                        getPlaywright()
+                                .webkit()
+                                .launch(new LaunchOptions()
+                                        .setHeadless(Boolean.getBoolean(prop.getProperty("headless")))
+                                )
+                );
                 break;
             case "chrome":
                 tlBrowser.set(
-                        getPlaywright().chromium().launch(new LaunchOptions().setChannel("chrome").setHeadless(false).setSlowMo(2000).setArgs(Arrays.asList("--start-maximized"))));
+                        getPlaywright()
+                                .chromium()
+                                .launch(new LaunchOptions()
+                                        .setHeadless(Boolean.getBoolean(prop.getProperty("headless")))
+                                        .setArgs(Arrays.asList("--start-maximized"))
+                                )
+                );
                 break;
             case "edge":
                 tlBrowser.set(
-                        getPlaywright().chromium().launch(new LaunchOptions().setChannel("msedge").setHeadless(false)));
+                        getPlaywright()
+                                .chromium()
+                                .launch(new LaunchOptions()
+                                        .setHeadless(Boolean.getBoolean(prop.getProperty("headless")))
+                                        .setChannel("msedge")
+                                )
+                );
                 break;
 
             default:

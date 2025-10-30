@@ -2,9 +2,7 @@ package com.qa.playwright.base;
 
 import java.util.Properties;
 
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Parameters;
+import org.testng.annotations.*;
 
 import com.microsoft.playwright.Page;
 import com.qa.playwright.factory.PlaywrightFactory;
@@ -17,11 +15,12 @@ public class BaseTest {
     Page page;
     protected Properties prop;
 
+//    Pages
     protected HomePage homePage;
     protected LoginPage loginPage;
 
     @Parameters({ "browser" })
-    @BeforeTest
+    @BeforeClass
     public void setup(String browserName) {
         pf = new PlaywrightFactory();
 
@@ -35,7 +34,7 @@ public class BaseTest {
         homePage = new HomePage(page);
     }
 
-    @AfterTest
+    @AfterClass
     public void tearDown() {
         page.context().browser().close();
     }

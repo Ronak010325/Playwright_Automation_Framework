@@ -23,28 +23,29 @@ import static com.qa.playwright.factory.PlaywrightFactory.takeScreenshot;
 
 public class ExtentReportListener implements ITestListener {
     static Properties property;
-    static String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH-mm-ss").format(new Date());
 
+    public static ThreadLocal<ExtentTest> test = new ThreadLocal<ExtentTest>();
     private static ExtentReports extent;
 
-    static {
+    @Override
+    public void onStart(ITestContext context) {
+        System.out.println("Test Suite started!");
+        FileInputStream ip = null;
         try {
-            extent = init();
+            ip = new FileInputStream("./src/test/resources/config/config.properties");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        property = new Properties();
+        try {
+            property.load(ip);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
 
-    public static ThreadLocal<ExtentTest> test = new ThreadLocal<ExtentTest>();
-    private static ExtentReports extentReports;
+        String projectName = property.getProperty("projectName");
 
-
-    private static ExtentReports init() throws IOException {
-        FileInputStream ip = new FileInputStream("./src/test/resources/config/config.properties");
-        property = new Properties();
-        property.load(ip);
-
-        String OUTPUT_FOLDER = "./Reports/"+property.get("projectName")+"/";
+        String OUTPUT_FOLDER = "./Reports/"+projectName+"/";
 
         Path path = Paths.get(OUTPUT_FOLDER);
         // if directory exists?
@@ -57,36 +58,29 @@ public class ExtentReportListener implements ITestListener {
             }
         }
 
-        extentReports = new ExtentReports();
-        ExtentSparkReporter reporter = new ExtentSparkReporter(OUTPUT_FOLDER + property.get("projectName") + timestamp);
-        reporter.config().setReportName("EasyDinner Automation Test Results");
-        extentReports.attachReporter(reporter);
-        extentReports.setSystemInfo("System", "WINDOWS");
-        extentReports.setSystemInfo("Author", "Planit Testing");
+        extent = new ExtentReports();
+        String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH-mm-ss").format(new Date());
+        ExtentSparkReporter reporter = new ExtentSparkReporter(OUTPUT_FOLDER + projectName + timestamp);
+        reporter.config().setReportName(projectName+" Automation Test Results");
+        extent.attachReporter(reporter);
+        extent.setSystemInfo("System", "WINDOWS");
+        String browser = context.getCurrentXmlTest().getParameter("browser");
+        extent.setSystemInfo("Broswer", browser);
+        extent.setSystemInfo("Author", "Planit Testing");
 //		extentReports.setSystemInfo("Build", "1.1");
-        extentReports.setSystemInfo("Team", "QA");
-        extentReports.setSystemInfo("Customer Name", "EasyDinner");
-
-        //extentReports.setSystemInfo("ENV NAME", System.getProperty("env"));
-
-        return extentReports;
+        extent.setSystemInfo("Team", "QA");
+        extent.setSystemInfo("Customer Name", projectName);
     }
 
     @Override
-    public synchronized void onStart(ITestContext context) {
-        System.out.println("Test Suite started!");
-
-    }
-
-    @Override
-    public synchronized void onFinish(ITestContext context) {
+    public void onFinish(ITestContext context) {
         System.out.println(("Test Suite is ending!"));
         extent.flush();
         test.remove();
     }
 
     @Override
-    public synchronized void onTestStart(ITestResult result) {
+    public void onTestStart(ITestResult result) {
         String methodName = result.getMethod().getMethodName();
         String qualifiedName = result.getMethod().getQualifiedName();
         int last = qualifiedName.lastIndexOf(".");
@@ -107,26 +101,26 @@ public class ExtentReportListener implements ITestListener {
         test.get().getModel().setStartTime(getTime(result.getStartMillis()));
     }
 
-    public synchronized void onTestSuccess(ITestResult result) {
+    public void onTestSuccess(ITestResult result) {
         System.out.println((result.getMethod().getMethodName() + " passed!"));
         test.get().pass("Test passed");
         test.get().pass(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot(),result.getMethod().getMethodName()).build());
         test.get().getModel().setEndTime(getTime(result.getEndMillis()));
     }
 
-    public synchronized void onTestFailure(ITestResult result) {
+    public void onTestFailure(ITestResult result) {
         System.out.println((result.getMethod().getMethodName() + " failed!"));
         test.get().fail(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot(),result.getMethod().getMethodName()).build());
         test.get().getModel().setEndTime(getTime(result.getEndMillis()));
     }
 
-    public synchronized void onTestSkipped(ITestResult result) {
+    public void onTestSkipped(ITestResult result) {
         System.out.println((result.getMethod().getMethodName() + " skipped!"));
         test.get().skip(result.getThrowable(), MediaEntityBuilder.createScreenCaptureFromBase64String(takeScreenshot(), result.getMethod().getMethodName()).build());
         test.get().getModel().setEndTime(getTime(result.getEndMillis()));
     }
 
-    public synchronized void onTestFailedButWithinSuccessPercentage(ITestResult result) {
+    public void onTestFailedButWithinSuccessPercentage(ITestResult result) {
         System.out.println(("onTestFailedButWithinSuccessPercentage for " + result.getMethod().getMethodName()));
     }
 
