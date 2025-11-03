@@ -24,8 +24,8 @@ import static com.qa.playwright.factory.PlaywrightFactory.takeScreenshot;
 public class ExtentReportListener implements ITestListener {
     static Properties property;
 
-    public static ThreadLocal<ExtentTest> test = new ThreadLocal<ExtentTest>();
-    private static ExtentReports extent;
+    public ThreadLocal<ExtentTest> test = new ThreadLocal<ExtentTest>();
+    private ExtentReports extent;
 
     @Override
     public void onStart(ITestContext context) {
@@ -60,7 +60,8 @@ public class ExtentReportListener implements ITestListener {
 
         extent = new ExtentReports();
         String timestamp = new SimpleDateFormat("yyyy_MM_dd_HH-mm-ss").format(new Date());
-        ExtentSparkReporter reporter = new ExtentSparkReporter(OUTPUT_FOLDER + projectName + timestamp);
+        String reportFile = OUTPUT_FOLDER + projectName + "_" + timestamp + "_" + Thread.currentThread().getId() + ".html";
+        ExtentSparkReporter reporter = new ExtentSparkReporter(reportFile);
         reporter.config().setReportName(projectName+" Automation Test Results");
         extent.attachReporter(reporter);
         extent.setSystemInfo("System", "WINDOWS");

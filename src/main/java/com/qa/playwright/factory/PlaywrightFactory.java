@@ -59,6 +59,8 @@ public class PlaywrightFactory {
                                 .chromium()
                                 .launch(new LaunchOptions()
                                         .setHeadless(Boolean.getBoolean(prop.getProperty("headless")))
+                                        .setArgs(Arrays.asList("--start-maximized"))
+                                        .setSlowMo(2000)
                                 )
                 );
                 break;
@@ -67,8 +69,9 @@ public class PlaywrightFactory {
                         getPlaywright()
                                 .firefox()
                                 .launch(new LaunchOptions()
-                                        .setHeadless(Boolean.getBoolean(prop.getProperty("headless"))
-                                        )
+                                        .setHeadless(Boolean.getBoolean(prop.getProperty("headless")))
+                                        .setArgs(Arrays.asList("--start-maximized"))
+                                        .setSlowMo(2000)
                                 )
                 );
                 break;
@@ -78,6 +81,8 @@ public class PlaywrightFactory {
                                 .webkit()
                                 .launch(new LaunchOptions()
                                         .setHeadless(Boolean.getBoolean(prop.getProperty("headless")))
+                                        .setArgs(Arrays.asList("--start-maximized"))
+                                        .setSlowMo(2000)
                                 )
                 );
                 break;
@@ -87,7 +92,9 @@ public class PlaywrightFactory {
                                 .chromium()
                                 .launch(new LaunchOptions()
                                         .setHeadless(Boolean.getBoolean(prop.getProperty("headless")))
+                                        .setChannel("chrome")
                                         .setArgs(Arrays.asList("--start-maximized"))
+                                        .setSlowMo(2000)
                                 )
                 );
                 break;
@@ -98,6 +105,7 @@ public class PlaywrightFactory {
                                 .launch(new LaunchOptions()
                                         .setHeadless(Boolean.getBoolean(prop.getProperty("headless")))
                                         .setChannel("msedge")
+                                        .setSlowMo(2000)
                                 )
                 );
                 break;
@@ -107,6 +115,9 @@ public class PlaywrightFactory {
                 break;
         }
 
+//      We are using browserContext to maintain isolation in parallel as well as normal testing.
+//      Running multiple tests cannot interfere with each other.
+//      Important for maintaining independent sessions.
         tlBrowserContext.set(getBrowser().newContext(new Browser.NewContextOptions().setViewportSize(null)));
         tlPage.set(getBrowserContext().newPage());
         getPage().navigate(prop.getProperty("url").trim());
@@ -114,9 +125,7 @@ public class PlaywrightFactory {
 
     }
 
-    /**
-     * this method is used to initialize the properties from config file
-     */
+    // this method is used to initialize the properties from config file
     public Properties init_prop() {
 
         try {
@@ -133,11 +142,7 @@ public class PlaywrightFactory {
 
     }
 
-    /**
-     * take screenshot
-     *
-     */
-
+    // take screenshot
     public static String takeScreenshot() {
         String path = System.getProperty("user.dir") + "/screenshot/" + System.currentTimeMillis() + ".png";
         //getPage().screenshot(new Page.ScreenshotOptions().setPath(Paths.get(path)).setFullPage(true));

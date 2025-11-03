@@ -2,11 +2,13 @@ package com.qa.playwright.base;
 
 import java.util.Properties;
 
+import com.qa.playwright.pages.AmazonTestCases.CartPage;
+import com.qa.playwright.pages.AmazonTestCases.HomePage;
+import com.qa.playwright.pages.PracticeHomePage;
 import org.testng.annotations.*;
 
 import com.microsoft.playwright.Page;
 import com.qa.playwright.factory.PlaywrightFactory;
-import com.qa.playwright.pages.HomePage;
 import com.qa.playwright.pages.LoginPage;
 
 public class BaseTest {
@@ -16,8 +18,10 @@ public class BaseTest {
     protected Properties prop;
 
 //    Pages
-    protected HomePage homePage;
+    protected PracticeHomePage homePage;
     protected LoginPage loginPage;
+    protected HomePage amazonPage;
+    protected CartPage amazonCartPage;
 
     @Parameters({ "browser" })
     @BeforeClass
@@ -31,7 +35,8 @@ public class BaseTest {
         }
 
         page = pf.initBrowser(prop);
-        homePage = new HomePage(page);
+        homePage = new PracticeHomePage(page);
+        amazonPage = new HomePage(page);
     }
 
     @AfterClass
