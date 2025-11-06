@@ -2,26 +2,31 @@ package com.qa.playwright.base;
 
 import java.util.Properties;
 
-import com.qa.playwright.pages.AmazonTestCases.CartPage;
-import com.qa.playwright.pages.AmazonTestCases.HomePage;
+import com.qa.playwright.pages.AmazonPages.CartPage;
+import com.qa.playwright.pages.AmazonPages.HomePage;
 import com.qa.playwright.pages.PracticeHomePage;
+import com.qa.playwright.pages.SwagLabPages.swagLabHomePage;
+import com.qa.playwright.pages.SwagLabPages.swagLabLoginPage;
 import org.testng.annotations.*;
 
 import com.microsoft.playwright.Page;
 import com.qa.playwright.factory.PlaywrightFactory;
 import com.qa.playwright.pages.LoginPage;
+import org.testng.asserts.SoftAssert;
 
 public class BaseTest {
 
     PlaywrightFactory pf;
     Page page;
-    protected Properties prop;
-
+    protected static Properties prop;
+    protected SoftAssert softAssert;
 //    Pages
     protected PracticeHomePage homePage;
     protected LoginPage loginPage;
     protected HomePage amazonPage;
     protected CartPage amazonCartPage;
+    protected swagLabLoginPage swagloginPage;
+    protected swagLabHomePage swagLabHomePage;
 
     @Parameters({ "browser" })
     @BeforeClass
@@ -30,6 +35,8 @@ public class BaseTest {
 
         prop = pf.init_prop();
 
+        softAssert = new SoftAssert();
+
         if (browserName != null) {
             prop.setProperty("browser", browserName);
         }
@@ -37,6 +44,7 @@ public class BaseTest {
         page = pf.initBrowser(prop);
         homePage = new PracticeHomePage(page);
         amazonPage = new HomePage(page);
+        swagloginPage = new swagLabLoginPage(page);
     }
 
     @AfterClass
