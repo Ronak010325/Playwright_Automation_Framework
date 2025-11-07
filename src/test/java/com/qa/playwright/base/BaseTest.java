@@ -9,6 +9,7 @@ import com.qa.playwright.pages.AmazonPages.HomePage;
 import com.qa.playwright.pages.PracticeHomePage;
 import com.qa.playwright.pages.SwagLabPages.swagLabHomePage;
 import com.qa.playwright.pages.SwagLabPages.swagLabLoginPage;
+import com.qa.playwright.utilities.ReusableFunctions;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.testng.annotations.*;
@@ -33,6 +34,7 @@ public class BaseTest {
     protected CartPage amazonCartPage;
     protected swagLabLoginPage swagloginPage;
     protected swagLabHomePage swagLabHomePage;
+    protected ReusableFunctions _resuse;
 
     @Parameters({ "browser" })
     @BeforeClass
@@ -49,9 +51,11 @@ public class BaseTest {
         }
         logger.info("Browser initialize");
         page = pf.initBrowser(prop);
+        _resuse = new ReusableFunctions();
+
         homePage = new PracticeHomePage(page);
         amazonPage = new HomePage(page);
-        swagloginPage = new swagLabLoginPage(page);
+        swagloginPage = new swagLabLoginPage(page, _resuse);
     }
 
     @AfterClass

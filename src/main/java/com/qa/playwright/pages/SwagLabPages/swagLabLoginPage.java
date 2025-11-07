@@ -1,11 +1,14 @@
 package com.qa.playwright.pages.SwagLabPages;
 
 import com.microsoft.playwright.Page;
+import com.qa.playwright.utilities.ReusableFunctions;
 
 public class swagLabLoginPage {
     private Page page;
-    public swagLabLoginPage(Page page) {
+    private ReusableFunctions _reuse;
+    public swagLabLoginPage(Page page, ReusableFunctions _reuse) {
         this.page = page;
+        this._reuse = _reuse;
     }
 
     String userNameField = "//input[@id='user-name']";
@@ -32,7 +35,13 @@ public class swagLabLoginPage {
         return status.equals("valid");
     }
 
+    public void login(String username, String password) {
+        enterUsername(username);
+        enterPassword(password);
+        clickLogin();
+    }
+
     public swagLabHomePage navigateToHomePage() {
-        return new swagLabHomePage(page);
+        return new swagLabHomePage(page, _reuse);
     }
 }
