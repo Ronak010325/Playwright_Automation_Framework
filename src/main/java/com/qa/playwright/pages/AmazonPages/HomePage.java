@@ -5,9 +5,6 @@ import com.qa.playwright.base.BasePage;
 import com.qa.playwright.utilities.ReusableFunctions;
 
 public class HomePage extends BasePage {
-
-    private Page page;
-
     public HomePage(Page page, ReusableFunctions _reuse) {
         super(page, _reuse);
     }
@@ -25,7 +22,8 @@ public class HomePage extends BasePage {
         page.click(addToCartBtn);
     }
 
-    public boolean verifyItemAdded() {
+    public boolean verifyItemAdded() throws InterruptedException {
+        Thread.sleep(2000);
         return page.textContent(cartCount).equals("1");
     }
 

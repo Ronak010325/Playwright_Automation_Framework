@@ -7,6 +7,7 @@ import com.microsoft.playwright.options.LoadState;
 import com.microsoft.playwright.options.SelectOption;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -191,5 +192,42 @@ public class ReusableFunctions {
             logger.error("Failed to Locate Check Boxs");
         }
         return flag;
+    }
+
+    public List<String> getCellValues(Page page, String locator, int cellNo) {
+        List<String> values = new ArrayList<>();
+        try{
+            Locator table = page.locator(locator);
+            int rows = table.locator("//tr").count();
+            for (int i = 1 ; i < rows ; i++) {
+                values.add(table.locator("//tbody/tr["+i+"]/td["+cellNo+"]").textContent());
+            }
+        } catch (Exception e) {
+            logger.error("Error while finding value xpath might be incorrect.");
+        }
+        return values;
+    }
+
+    public List<String> getCellValues(Page page, String locator, int cellNo, String pageNation) {
+        logger.info("Capture Values of Table");
+        Locator pageNationBtn = page.locator(pageNation);
+        List<String> values = new ArrayList<>();
+        logger.info("Scanning the Table to get Values of "+cellNo+" Column.");
+        for (int i = 0 ; i < pageNationBtn.count() ; i++) {
+            logger.info("Getting Values from Page "+(i+1));
+            pageNationBtn.nth(i).click();
+            try{
+                Locator table = page.locator(locator);
+                int rows = table.locator("//tr").count();
+                for (int j = 1 ; j < rows ; j++) {
+                    logger.info("Getting value of row "+j+" and cell "+cellNo);
+                    values.add(table.locator("//tbody/tr["+j+"]/td["+cellNo+"]").textContent());
+                }
+            } catch (Exception e) {
+                logger.error("Error while finding value xpath might be incorrect.");
+            }
+        }
+        logger.info("Scanning Complete");
+        return values;
     }
 }
