@@ -1,14 +1,13 @@
 package com.qa.playwright.pages.SwagLabPages;
 
 import com.microsoft.playwright.Page;
+import com.qa.playwright.base.BasePage;
 import com.qa.playwright.utilities.ReusableFunctions;
 
-public class swagLabLoginPage {
-    private Page page;
-    private ReusableFunctions _reuse;
+public class swagLabLoginPage extends BasePage {
+
     public swagLabLoginPage(Page page, ReusableFunctions _reuse) {
-        this.page = page;
-        this._reuse = _reuse;
+        super(page, _reuse);
     }
 
     String userNameField = "//input[@id='user-name']";

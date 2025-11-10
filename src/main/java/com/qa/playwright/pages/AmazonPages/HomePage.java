@@ -1,13 +1,15 @@
 package com.qa.playwright.pages.AmazonPages;
 
 import com.microsoft.playwright.Page;
+import com.qa.playwright.base.BasePage;
+import com.qa.playwright.utilities.ReusableFunctions;
 
-public class HomePage {
+public class HomePage extends BasePage {
 
     private Page page;
 
-    public HomePage(Page page) {
-        this.page = page;
+    public HomePage(Page page, ReusableFunctions _reuse) {
+        super(page, _reuse);
     }
 
 //    Locators
@@ -29,6 +31,6 @@ public class HomePage {
 
     public CartPage navigateToCart() {
         page.click(cartIconNav);
-        return new CartPage(page);
+        return new CartPage(page, _reuse);
     }
 }

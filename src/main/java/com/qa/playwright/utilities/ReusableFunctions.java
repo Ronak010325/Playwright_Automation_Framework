@@ -5,12 +5,19 @@ import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.LoadState;
 import com.microsoft.playwright.options.SelectOption;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReusableFunctions {
+    Logger logger;
+
+    public ReusableFunctions(Logger logger) {
+        this.logger = logger;
+    }
+
     public void selectOption(Page page, String dropDown, String value) {
         page.locator(dropDown).selectOption(new SelectOption().setLabel(value));
     }
@@ -110,5 +117,79 @@ public class ReusableFunctions {
         } catch (Exception e) {
             System.out.println("Error While Entering Text");
         }
+    }
+
+    public void selectRadioBtnValue(Page page, String locator, String value) {
+        try{
+            logger.info("Locating Radio Button");
+            Locator radioBtns = page.locator(locator);
+            for (int i = 0 ; i < radioBtns.count() ; i++) {
+                String attributeValue = radioBtns.nth(i).getAttribute("value");
+                if(attributeValue.equalsIgnoreCase(value)) {
+                    radioBtns.nth(i).click();
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Failed to Locate Radio Btn");
+        }
+    }
+
+    public boolean isRadioBtnSelected(Page page, String locator, String value) {
+        boolean flag = false;
+        try{
+            logger.info("Locating Radio Button");
+            Locator radioBtns = page.locator(locator);
+            for (int i = 0 ; i < radioBtns.count() ; i++) {
+                String attributeValue = radioBtns.nth(i).getAttribute("value");
+                logger.info("Radio Button with Value "+attributeValue+" is Present");
+                if(attributeValue.equalsIgnoreCase(value)) {
+                    logger.info("Clicking on "+attributeValue);
+                    flag = radioBtns.nth(i).isChecked();
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Failed to Locate Radio Btn");
+        }
+        return flag;
+    }
+
+    public void selectCheckBoxs(Page page, String locator, List<String> values) {
+        try {
+            logger.info("Locating Check Boxs");
+            Locator checkBox = page.locator(locator);
+            values.forEach(value -> {
+                for (int i = 0; i < checkBox.count(); i++) {
+                    String Value = checkBox.nth(i).getAttribute("value");
+                    if (Value.equalsIgnoreCase(value)) {
+                        logger.info("Selecting "+Value);
+                        checkBox.nth(i).click();
+                        break;
+                    }
+                }
+            });
+        } catch (Exception e) {
+            logger.error("Failed to Locate Check Boxs");
+        }
+    }
+
+    public boolean isCheckBoxSelected(Page page, String locator, List<String> values) {
+        boolean flag = false;
+        try {
+            logger.info("Locating Check Boxs");
+            Locator checkBox = page.locator(locator);
+            for (String value : values) {
+                for (int j = 0; j < checkBox.count(); j++) {
+                    String attValue = checkBox.nth(j).getAttribute("value");
+                    if (attValue.equalsIgnoreCase(value)) {
+                        logger.info("Checking if " + attValue + " is Selected or not");
+                        flag = checkBox.nth(j).isChecked();
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error("Failed to Locate Check Boxs");
+        }
+        return flag;
     }
 }

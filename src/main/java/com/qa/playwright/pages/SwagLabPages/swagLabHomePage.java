@@ -2,18 +2,15 @@ package com.qa.playwright.pages.SwagLabPages;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
+import com.qa.playwright.base.BasePage;
 import com.qa.playwright.utilities.ReusableFunctions;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class swagLabHomePage {
-    private Page page;
-    private ReusableFunctions _reuse;
+public class swagLabHomePage extends BasePage {
 
     public swagLabHomePage(Page page, ReusableFunctions _reuse) {
-        this.page = page;
-        this._reuse = _reuse;
+        super(page, _reuse);
     }
 
     String menuBtn = "//button[@id='react-burger-menu-btn']";
