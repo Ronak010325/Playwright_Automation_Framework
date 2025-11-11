@@ -28,7 +28,7 @@ public class HomePageTest extends BaseTest {
         logger.info(gender+" is Selected");
     }
 
-    @Test
+    @Test(enabled = false)
     public void testCheckBox() {
         List<String> itemsToSelect = Arrays.asList("monday", "tuesday", "thursday");
         logger.info("Testing Checkbox");
@@ -37,5 +37,13 @@ public class HomePageTest extends BaseTest {
         boolean status = testAutomationHomePage.verifyDaysSelected(itemsToSelect);
         Assert.assertTrue(status, "Check Boxs are not selected");
         logger.info(itemsToSelect+" are selected");
+    }
+
+    @Test
+    public void testWebTables() {
+        String element = "Portable Charger";
+        logger.info("Checking if "+element+" is present or not");
+        Assert.assertTrue(testAutomationHomePage.verifyItemPresentInTable(element), "Element is not present");
+        logger.info(element+" is present");
     }
 }

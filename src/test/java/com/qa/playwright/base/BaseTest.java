@@ -24,7 +24,7 @@ public class BaseTest {
 
     PlaywrightFactory pf;
     Page page;
-    protected static Properties prop;
+    protected Properties prop;
     protected SoftAssert softAssert;
 
     protected static final Logger logger = Logger.getLogger(BaseTest.class);
